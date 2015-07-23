@@ -16,7 +16,7 @@ public class SqlLogFormatController {
     @Autowired
     private SqlLogFormatService sqlLogFormatService;
 
-    @RequestMapping("/sqllogformat/input")
+    @RequestMapping("/")
     public String input(ModelAndView modelAndView) {
         return "sqllogformat/input";
     }

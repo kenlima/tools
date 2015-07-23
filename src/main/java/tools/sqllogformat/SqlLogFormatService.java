@@ -63,14 +63,18 @@ public class SqlLogFormatService {
         return resultSql;
     }
 
-    private String bindingParameter(SqlLogLineSet sqlLog) {
+    public String bindingParameter(SqlLogLineSet sqlLog) {
         StringBuffer mappedQuerySb = new StringBuffer();
         int q1 = 0;
         int q2 = 0;
         int parameterIdx = 0;
         String inputQuery = sqlLog.getSqlLine();
+        // -? 문자가 있으면 formatting 이 안되서 임시로 문자열 변경 한다.
+        inputQuery = inputQuery.replaceAll("\\-\\?", "'-?'");
         inputQuery = formattingSql(inputQuery);
         List<String> parameters = extractParameter(sqlLog.getParameterLine());
+        // '-?' 를 원래대로 되돌린다. 
+        inputQuery = inputQuery.replaceAll("'\\-\\?'", "-?");
         while (true) {
             q2 = inputQuery.indexOf("?", q1);
             if (q2 < 0) {
@@ -88,9 +92,10 @@ public class SqlLogFormatService {
         return mappedQuerySb.toString();
     }
 
-    private String formattingSql(String result) {
+    public String formattingSql(String result) {
         System.out.println("extracted sql : " + result);
         TGSqlParser sqlparser = new TGSqlParser(EDbVendor.dbvmysql);
+
         sqlparser.setSqltext(result);
         int ret = sqlparser.parse();
         String result2 = null;
