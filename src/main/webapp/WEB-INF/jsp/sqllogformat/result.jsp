@@ -10,8 +10,8 @@
 <script type="text/javascript" src="/js/jquery.zclip.min.js"></script>
 <script>
 	$(document).ready(function() {
-		// 특수 공백문자 일반 공백문자로 치환 
-		console.log($('a#copy-description'));
+		// 특수 공백문자 일반 공백문자로 치환
+		// TODO replace 서버에서 할 수 있도록 
 		$('a#copy-description').zclip({ path : '/js/ZeroClipboard.swf',
 		copy : function() {
 			var idx = $(this).data('idx');
