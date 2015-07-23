@@ -18,7 +18,7 @@
 			return ($('p#description_' + idx).text()).replace(/ /gi, " ")
 		},
 		afterCopy : function() {
-			alert("Complete copy to clipboard.");
+			//alert("Complete copy to clipboard.");
 		}
 		});
 		// The link with ID "copy-description" will copy
