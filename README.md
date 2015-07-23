@@ -1,3 +1,3 @@
 # tools
 
-java -Dspring.profiles.active=real -jar tools-0.1.0.jar &
+mvn clean spring-boot:run -Dspring.profiles.active=real
