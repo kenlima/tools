@@ -1,1 +1,1 @@
-mvn clean spring-boot:run -Dspring.profiles.active=real
+mvn clean spring-boot:run -Dspring.profiles.active=real &
