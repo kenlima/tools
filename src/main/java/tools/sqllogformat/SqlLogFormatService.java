@@ -17,10 +17,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SqlLogFormatService {
+
+    private static final Logger log = LoggerFactory.getLogger(SqlLogFormatService.class);
+
     public List<FormattedSql> formatting(String sqlLog) throws IOException {
 
         // convert String into InputStream
@@ -71,7 +76,10 @@ public class SqlLogFormatService {
         String inputQuery = sqlLog.getSqlLine();
         // -? 문자가 있으면 formatting 이 안되서 임시로 문자열 변경 한다.
         inputQuery = inputQuery.replaceAll("\\-\\?", "'-?'");
+        log.info("Extracetd sql:{}", inputQuery);
+
         inputQuery = formattingSql(inputQuery);
+
         List<String> parameters = extractParameter(sqlLog.getParameterLine());
         // '-?' 를 원래대로 되돌린다. 
         inputQuery = inputQuery.replaceAll("'\\-\\?'", "-?");
@@ -92,22 +100,21 @@ public class SqlLogFormatService {
         return mappedQuerySb.toString();
     }
 
-    public String formattingSql(String result) {
-        System.out.println("extracted sql : " + result);
+    public String formattingSql(String inputSql) {
         TGSqlParser sqlparser = new TGSqlParser(EDbVendor.dbvmysql);
 
-        sqlparser.setSqltext(result);
+        sqlparser.setSqltext(inputSql);
         int ret = sqlparser.parse();
-        String result2 = null;
+        String result = null;
         if (ret == 0) {
             GFmtOpt option = GFmtOptFactory.newInstance();
             option.outputFmt = GOutputFmt.ofhtml;
-            result2 = FormatterFactory.pp(sqlparser, option);
-            System.out.println(result2);
+            result = FormatterFactory.pp(sqlparser, option);
+        } else {
+            throw new RuntimeException("formatting error. ret:" + ret);
         }
-        System.out.println("parsed sql : " + result2);
 
-        return result2;
+        return result;
     }
 
     private List<String> extractParameter(String parameterLine) {
