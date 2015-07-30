@@ -74,9 +74,6 @@ public class SqlLogFormatService {
         int q2 = 0;
         int parameterIdx = 0;
         String inputQuery = sqlLog.getSqlLine();
-        // -? 문자가 있으면 formatting 이 안되서 임시로 문자열 변경 한다.
-        inputQuery = inputQuery.replaceAll("\\-\\?", "'-?'");
-        log.info("Extracetd sql:{}", inputQuery);
 
         inputQuery = formattingSql(inputQuery);
 
@@ -101,6 +98,12 @@ public class SqlLogFormatService {
     }
 
     public String formattingSql(String inputSql) {
+        
+        // -? 문자가 있으면 formatting 이 안되서 임시로 문자열 변경 한다.
+        inputSql = inputSql.replaceAll("\\-\\?", "'-?'");
+        inputSql = inputSql.replaceAll("having 1 = 1", "");
+        log.info("Extracetd sql:{}", inputSql);
+        
         TGSqlParser sqlparser = new TGSqlParser(EDbVendor.dbvmysql);
 
         sqlparser.setSqltext(inputSql);
